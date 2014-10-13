@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../src/async/PromiseA.js"></script>
+</head>
+<body>
+
+
+<script type="text/javascript">
+    var emitter = new EventEmitter();
+
+    var fn1 = function (msg) {
+        console.log('fn1 fired by t1, message: ' + msg);
+    };
+
+    var fn2 = function (msg) {
+        console.log('fn2 fired by t2, message: ' + msg);
+    };
+
+    var fn3 = function (msg) {
+        console.log('fn3 fired by t2, message: ' + msg);
+    };
+
+
+    emitter.on('t1', fn1);
+
+    emitter.once('t2', fn2);
+
+    emitter.emit('t1', 'hello');
+    emitter.emit('t2', 'hello');
+
+
+    emitter.once('t2', fn3);
+
+    emitter.remove('t1', fn1);
+
+    emitter.emit('t1', 'hello');
+    emitter.emit('t2', 'hello');
+</script>
+</body>
+</html>
