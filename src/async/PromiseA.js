@@ -84,7 +84,6 @@ Promise.prototype = {
         this.emitter.on('progress', fnc);
         return this;
     },
-    //emit: function(t) this.emitter.emit,
     then: function (done, fail, progress) {
         if (typeof done === 'function') {
             this.done(done);
@@ -99,8 +98,11 @@ Promise.prototype = {
     }
 };
 
+var state = ['progress', 'resolved', 'failed'];
+
 var Deferred = function () {
     this._promise = new Promise();
+    this.state = state[0];
 };
 
 Deferred.prototype = {
@@ -108,15 +110,23 @@ Deferred.prototype = {
         return this._promise;
     },
     resolve: function (data) {
-        this._promise.emit('done', data, this);
+        if(this.state === state[0]) {
+            this._promise.emit('done', data, this);
+            this.state = state[1];
+        }
         return this;
     },
     reject: function (data) {
-        this._promise.emit('fail', data, this);
+        if(this.state === state[0]) {
+            this._promise.emit('fail', data, this);
+            this.state = state[2];
+        }
         return this;
     },
     notify: function (data) {
-        this._promise.emit('progress', data, this);
+        if(this.state === state[0]) {
+            this._promise.emit('progress', data, this);
+        }
         return this;
     },
     makeNodeResolver: function () {
