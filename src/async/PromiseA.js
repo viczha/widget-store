@@ -138,7 +138,7 @@ Deferred.prototype = {
             self = this,
             result = [];
 
-        args.forEach(function (i, fn) {
+        args.forEach(function (fn, i) {
             fn.then(function (data) {
                 count--;
                 result[i] = data;

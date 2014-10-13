@@ -23,21 +23,17 @@
         console.log('fn3 fired by t2, message: ' + msg);
     };
 
+    var deffered = new Deferred();
+    var promise = deffered.promise();
+    promise.then(fn1, fn2, fn3);
 
-    emitter.on('t1', fn1);
+    var d1 = new Deferred();
+    var d2 = new Deferred();
 
-    emitter.once('t2', fn2);
+    deffered.when(d1.promise(), d2.promise()).then(fn1, fn2, fn3);
 
-    emitter.emit('t1', 'hello');
-    emitter.emit('t2', 'hello');
-
-
-    emitter.once('t2', fn3);
-
-    emitter.remove('t1', fn1);
-
-    emitter.emit('t1', 'hello');
-    emitter.emit('t2', 'hello');
+    d1.resolve('1');
+    d2.resolve('2');
 </script>
 </body>
 </html>
